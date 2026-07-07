@@ -1,0 +1,17 @@
+{
+  "name": "poaley-chedec",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "lint": "npm run lint --prefix frontend"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3"
+  },
+  "lint-staged": {
+    "frontend/**/*.{ts,tsx}": [
+      "npm run lint --prefix frontend"
+    ]
+  }
+}

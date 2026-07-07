@@ -1,0 +1,36 @@
+---
+description: Spec-first, milestone-driven development workflow with approval gates
+alwaysApply: true
+---
+
+# Spec-Driven Development
+
+## Before Writing Code
+
+1. Analyze the entire specification before writing any code.
+2. If any requirement is unclear or missing, **stop and ask questions** — never assume requirements.
+3. Produce a complete **Software Requirements Specification (SRS)** before development.
+4. **Wait for SRS approval** before proceeding.
+
+### SRS Should Include
+
+- Goals and scope
+- Functional and non-functional requirements
+- Data models and API contracts (if applicable)
+- Milestone breakdown with deliverables per milestone
+
+## Milestone Workflow
+
+- Develop in **milestones**, not one large batch.
+- After each milestone:
+  1. Summarize completed work
+  2. List remaining tasks
+  3. Perform a self code review
+  4. **Wait for approval** before continuing
+
+## Implementation Standards
+
+- Before creating any component, service, hook, utility, or API endpoint, **search the codebase for existing reuse**.
+- Follow DRY, SOLID, KISS, Clean Architecture, and production-grade practices.
+- Consider security, scalability, maintainability, SEO, and performance in every decision.
+- When a better approach exists, explain its **advantages and disadvantages** before applying it.
