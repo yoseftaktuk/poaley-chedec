@@ -70,11 +70,13 @@ createdb poaley_chedec_test
 
 ```bash
 cd backend
-pytest                    # All tests with coverage
+pytest                    # All tests with coverage (pythonpath configured in pytest.ini)
 pytest tests/api/test_auth.py   # Single file
 pytest -k "test_login"    # By name
 pytest --cov=app --cov-report=html  # HTML coverage
 ```
+
+Always run pytest from the `backend/` directory so the `app` package resolves correctly.
 
 ### Coverage report
 

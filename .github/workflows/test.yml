@@ -41,6 +41,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     env:
+      PYTHONPATH: .
       TEST_DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/poaley_chedec_test
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/poaley_chedec_test
       SECRET_KEY: test-secret-key
