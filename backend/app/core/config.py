@@ -1,6 +1,16 @@
 """Application settings loaded from environment variables (see .env.example)."""
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+def normalize_database_url(url: str) -> str:
+    """Ensure Render-style postgres URLs use the asyncpg SQLAlchemy driver."""
+    if url.startswith("postgres://"):
+        return "postgresql+asyncpg://" + url[len("postgres://") :]
+    if url.startswith("postgresql://"):
+        return "postgresql+asyncpg://" + url[len("postgresql://") :]
+    return url
 
 
 class Settings(BaseSettings):
@@ -50,6 +60,13 @@ class Settings(BaseSettings):
     cloudinary_cloud_name: str = ""
     cloudinary_api_key: str = ""
     cloudinary_api_secret: str = ""
+
+    @field_validator("database_url", "test_database_url", mode="before")
+    @classmethod
+    def ensure_async_postgres_driver(cls, value: object) -> object:
+        if isinstance(value, str):
+            return normalize_database_url(value)
+        return value
 
     @property
     def cors_origin_list(self) -> list[str]:

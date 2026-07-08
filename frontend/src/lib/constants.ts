@@ -8,6 +8,7 @@ export const ROUTES = {
   about: "/about",
   gallery: "/gallery",
   mikveh: "/mikveh",
+  donate: "/donate",
   contact: "/contact",
   accessibility: "/accessibility",
   admin: "/admin",
@@ -19,6 +20,7 @@ export const NAV_ITEMS = [
   { path: ROUTES.about, label: "אודות" },
   { path: ROUTES.gallery, label: "גלריה" },
   { path: ROUTES.mikveh, label: "מקווה" },
+  { path: ROUTES.donate, label: "תרומה" },
   { path: ROUTES.contact, label: "צור קשר" },
 ] as const;
 

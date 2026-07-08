@@ -6,12 +6,14 @@ describe("constants", () => {
   it("defines expected routes", () => {
     expect(ROUTES.home).toBe("/");
     expect(ROUTES.about).toBe("/about");
+    expect(ROUTES.donate).toBe("/donate");
     expect(ROUTES.contact).toBe("/contact");
   });
 
-  it("includes about in nav items", () => {
+  it("includes about and donate in nav items", () => {
     const labels = NAV_ITEMS.map((item) => item.label);
     expect(labels).toContain("אודות");
     expect(labels).toContain("דף הבית");
+    expect(labels).toContain("תרומה");
   });
 });

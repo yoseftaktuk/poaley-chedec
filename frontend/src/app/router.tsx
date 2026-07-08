@@ -10,6 +10,7 @@ const GalleryPage = lazy(() => import("@/pages/GalleryPage").then((m) => ({ defa
 const GalleryAlbumPage = lazy(() => import("@/pages/GalleryAlbumPage").then((m) => ({ default: m.GalleryAlbumPage })));
 const MikvehPage = lazy(() => import("@/pages/MikvehPage").then((m) => ({ default: m.MikvehPage })));
 const ContactPage = lazy(() => import("@/pages/ContactPage").then((m) => ({ default: m.ContactPage })));
+const DonatePage = lazy(() => import("@/pages/DonatePage").then((m) => ({ default: m.DonatePage })));
 const AccessibilityPage = lazy(() => import("@/pages/AccessibilityPage").then((m) => ({ default: m.AccessibilityPage })));
 const AboutPage = lazy(() => import("@/pages/AboutPage").then((m) => ({ default: m.AboutPage })));
 const AdminLoginPage = lazy(() => import("@/pages/admin/AdminLoginPage").then((m) => ({ default: m.AdminLoginPage })));
@@ -57,6 +58,7 @@ export function AppRouter() {
             <Route path={ROUTES.gallery} element={<PublicPage pageKey="gallery"><GalleryPage /></PublicPage>} />
             <Route path={`${ROUTES.gallery}/:albumId`} element={<PublicPage pageKey="gallery"><GalleryAlbumPage /></PublicPage>} />
             <Route path={ROUTES.mikveh} element={<PublicPage pageKey="mikveh"><MikvehPage /></PublicPage>} />
+            <Route path={ROUTES.donate} element={<PublicPage pageKey="donate"><DonatePage /></PublicPage>} />
             <Route path={ROUTES.contact} element={<PublicPage pageKey="contact"><ContactPage /></PublicPage>} />
             <Route path={ROUTES.accessibility} element={<PublicPage pageKey="accessibility"><AccessibilityPage /></PublicPage>} />
           </Route>

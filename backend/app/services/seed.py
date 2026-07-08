@@ -57,6 +57,10 @@ DEFAULT_SETTINGS: dict[str, dict] = {
         },
         "gallery": {"title": "גלריה", "description": "גלריית תמונות"},
         "mikveh": {"title": "מקווה", "description": "מידע על המקווה"},
+        "donate": {
+            "title": "תרומה | בית כנסת פועלי צדק",
+            "description": "תרמו לבית כנסת פועלי צדק ותמכו בפעילות הקהילה, שיעורי התורה והמסורת",
+        },
         "contact": {"title": "צור קשר", "description": "יצירת קשר עם בית הכנסת"},
     },
     "accessibility_statement": {
@@ -142,6 +146,16 @@ async def seed_fix_seo_pages_about(db: AsyncSession) -> None:
         await db.commit()
 
 
+async def seed_fix_seo_pages_donate(db: AsyncSession) -> None:
+    result = await db.execute(select(Setting).where(Setting.key == "seo_pages"))
+    setting = result.scalar_one_or_none()
+    if not setting:
+        return
+    if "donate" not in setting.value:
+        setting.value = {**setting.value, "donate": DEFAULT_SETTINGS["seo_pages"]["donate"]}
+        await db.commit()
+
+
 async def seed_fix_donation_settings(db: AsyncSession) -> None:
     result = await db.execute(select(Setting).where(Setting.key == "donation"))
     setting = result.scalar_one_or_none()
@@ -159,6 +173,7 @@ async def run_seed(db: AsyncSession) -> None:
     await seed_default_settings(db)
     await seed_fix_contact_settings(db)
     await seed_fix_seo_pages_about(db)
+    await seed_fix_seo_pages_donate(db)
     await seed_fix_donation_settings(db)
     await seed_mikveh(db)
 
