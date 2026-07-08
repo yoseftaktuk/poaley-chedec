@@ -8,7 +8,7 @@ from app.core.database import get_db
 from app.models import BannerMessage, Event, PrayerTime, TorahLesson
 from app.schemas import HomepageResponse, HomepageSettingsSnapshot
 from app.services.days_utils import first_day_of_week, is_active_on_weekday
-from app.services.prayer_times_api import to_prayer_time_responses
+from app.services.prayer_time_service import PrayerTimeService
 from app.services.seed import get_setting
 from app.services.utils import is_event_expired
 
@@ -54,7 +54,7 @@ async def get_homepage(db: AsyncSession = Depends(get_db)) -> HomepageResponse:
     )
 
     prayer_items = _sort_by_first_day(list(prayer_result.scalars().all()))
-    resolved_prayer_times = await to_prayer_time_responses(prayer_items)
+    resolved_prayer_times = await PrayerTimeService(db).to_prayer_time_responses(prayer_items)
 
     return HomepageResponse(
         settings=settings,

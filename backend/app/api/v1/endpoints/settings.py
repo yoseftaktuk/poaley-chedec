@@ -1,54 +1,37 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, Depends
 
-from app.core.audit import log_audit
-from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models import User
 from app.schemas import PublicSettingsResponse, SettingResponse, SettingUpdate
-from app.services.seed import DEFAULT_SETTINGS, get_setting, upsert_setting
+from app.services.dependencies import get_setting_service
+from app.services.setting_service import SettingService
 
 router = APIRouter()
 
-PUBLIC_KEYS = {"contact", "donation", "site", "seo_global", "seo_pages", "accessibility_statement", "homepage"}
-
 
 @router.get("/public", response_model=PublicSettingsResponse)
-async def get_public_settings(db: AsyncSession = Depends(get_db)) -> PublicSettingsResponse:
-    data = {key: await get_setting(db, key) for key in PUBLIC_KEYS}
-    return PublicSettingsResponse(**data)
+async def get_public_settings(
+    service: SettingService = Depends(get_setting_service),
+) -> PublicSettingsResponse:
+    return await service.get_public_settings()
 
 
 @router.get("/{section}", response_model=SettingResponse)
 async def get_setting_section(
     section: str,
-    db: AsyncSession = Depends(get_db),
-    current_user: Annotated[User, Depends(get_current_user)] = None,
+    current_user: Annotated[User, Depends(get_current_user)],
+    service: SettingService = Depends(get_setting_service),
 ) -> SettingResponse:
-    if section not in DEFAULT_SETTINGS:
-        raise HTTPException(status_code=404, detail="הגדרה לא נמצאה")
-    value = await get_setting(db, section)
-    return SettingResponse(key=section, value=value)
+    return await service.get_section(section)
 
 
 @router.put("/{section}", response_model=SettingResponse)
 async def update_setting_section(
     section: str,
     payload: SettingUpdate,
-    db: AsyncSession = Depends(get_db),
-    current_user: Annotated[User, Depends(get_current_user)] = None,
+    current_user: Annotated[User, Depends(get_current_user)],
+    service: SettingService = Depends(get_setting_service),
 ) -> SettingResponse:
-    if section not in DEFAULT_SETTINGS:
-        raise HTTPException(status_code=404, detail="הגדרה לא נמצאה")
-    setting = await upsert_setting(db, section, payload.value)
-    await log_audit(
-        db,
-        user_id=current_user.id,
-        action="update",
-        entity_type="setting",
-        changes={"key": section},
-    )
-    await db.commit()
-    return SettingResponse(key=setting.key, value=setting.value)
+    return await service.update_section(section, payload, current_user.id)
