@@ -17,6 +17,7 @@ from app.factory import create_app
 from app.models import User
 
 _DEBUG_LOG = "/Users/natankatz/poaley-chedec/.cursor/debug-d00f51.log"
+_tables_created = False
 
 
 def _agent_log(hypothesis_id: str, location: str, message: str, data: dict) -> None:
@@ -46,18 +47,24 @@ async def _test_lifespan(_app) -> AsyncIterator[None]:
     yield
 
 
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture
 async def test_engine():
+    global _tables_created
     # #region agent log
-    _agent_log("A", "conftest.py:test_engine", "creating test engine", {"loop_id": id(asyncio.get_running_loop())})
+    _agent_log(
+        "A",
+        "conftest.py:test_engine",
+        "creating test engine",
+        {"loop_id": id(asyncio.get_running_loop()), "tables_created": _tables_created},
+    )
     # #endregion
     engine = create_async_engine(settings.test_database_url, echo=False, poolclass=NullPool)
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
+    if not _tables_created:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
+            await conn.run_sync(Base.metadata.create_all)
+        _tables_created = True
     yield engine
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
     await engine.dispose()
 
 

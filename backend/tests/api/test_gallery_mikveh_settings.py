@@ -31,9 +31,9 @@ async def test_create_gallery_album(client, auth_headers):
 
 
 @pytest.mark.asyncio
-async def test_get_mikveh_default(client):
+async def test_get_mikveh_not_found_when_empty(client):
     response = await client.get("/api/v1/mikveh")
-    assert response.status_code == 200
+    assert response.status_code == 404
 
 
 @pytest.mark.asyncio

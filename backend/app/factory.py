@@ -1,10 +1,11 @@
 from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from app.api.v1.router import api_router
 from app.core.config import settings
@@ -12,6 +13,41 @@ from app.core.database import Base, async_session_factory, engine
 from app.core.limiter import limiter
 from app.services.db_migrate import run_schema_migrations
 from app.services.seed import run_seed
+
+
+class SecurityHeadersMiddleware:
+    """Pure ASGI middleware — avoids BaseHTTPMiddleware task-group loop issues in tests."""
+
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    def _extra_headers(self) -> list[tuple[bytes, bytes]]:
+        headers = [
+            (b"x-content-type-options", b"nosniff"),
+            (b"x-frame-options", b"DENY"),
+            (b"x-xss-protection", b"1; mode=block"),
+            (b"referrer-policy", b"strict-origin-when-cross-origin"),
+        ]
+        if settings.is_production:
+            headers.append((b"strict-transport-security", b"max-age=31536000; includeSubDomains"))
+        return headers
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        extra_headers = self._extra_headers()
+
+        async def send_with_security_headers(message: Message) -> None:
+            if message["type"] == "http.response.start":
+                message = {
+                    **message,
+                    "headers": list(message.get("headers", [])) + extra_headers,
+                }
+            await send(message)
+
+        await self.app(scope, receive, send_with_security_headers)
 
 
 def _default_lifespan_context() -> Callable:
@@ -48,17 +84,7 @@ def create_app(*, lifespan: Callable | None = None) -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-
-    @app.middleware("http")
-    async def security_headers(request: Request, call_next):
-        response = await call_next(request)
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        response.headers["X-Frame-Options"] = "DENY"
-        response.headers["X-XSS-Protection"] = "1; mode=block"
-        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        if settings.is_production:
-            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-        return response
+    app.add_middleware(SecurityHeadersMiddleware)
 
     @app.get("/")
     async def root():

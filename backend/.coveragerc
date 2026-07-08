@@ -1,0 +1,8 @@
+[run]
+omit =
+    app/main.py
+    app/services/seed.py
+    app/services/db_migrate.py
+    app/services/cloudinary_service.py
+    app/services/image_cleanup.py
+    app/api/v1/endpoints/uploads.py
