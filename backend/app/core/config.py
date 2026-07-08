@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     )
 
     database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/poaley_chedec"
+    test_database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/poaley_chedec_test"
     secret_key: str = "change-me"
     environment: str = "development"
     cors_origins: str = "http://localhost:5173"

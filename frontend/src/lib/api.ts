@@ -10,7 +10,7 @@ export class ApiError extends Error {
   }
 }
 
-function formatApiDetail(detail: unknown): string {
+export function formatApiErrorDetail(detail: unknown): string {
   if (typeof detail === "string") {
     return detail;
   }
@@ -46,7 +46,7 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
         window.location.assign("/admin/login");
       }
     }
-    throw new ApiError(response.status, formatApiDetail(error.detail));
+    throw new ApiError(response.status, formatApiErrorDetail(error.detail));
   }
 
   if (response.status === 204) {
@@ -72,7 +72,7 @@ export async function apiUpload<T>(path: string, formData: FormData): Promise<T>
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ detail: "שגיאה בהעלאה" }));
-    throw new ApiError(response.status, formatApiDetail(error.detail));
+    throw new ApiError(response.status, formatApiErrorDetail(error.detail));
   }
 
   return response.json() as Promise<T>;

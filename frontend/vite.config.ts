@@ -12,6 +12,9 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    allowedHosts: [
+      'poaley-chedec.onrender.com',
+    ],
   },
   build: {
     rollupOptions: {
@@ -31,5 +34,21 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: "./src/test/setup.ts",
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html", "lcov"],
+      thresholds: {
+        lines: 80,
+        functions: 80,
+        branches: 80,
+        statements: 80,
+      },
+      exclude: [
+        "src/main.tsx",
+        "src/app/router.tsx",
+        "src/**/*.d.ts",
+        "src/test/**",
+      ],
+    },
   },
 });

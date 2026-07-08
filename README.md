@@ -38,9 +38,15 @@ cd frontend && npm run dev
 ## Testing
 
 ```bash
-cd backend && pytest
+# Frontend
 cd frontend && npm run test
+cd frontend && npm run test:coverage
+
+# Backend (requires Python 3.12 + PostgreSQL test database)
+cd backend && pytest
 ```
+
+See [docs/testing.md](docs/testing.md) for full testing guide, coverage reports, and conventions.
 
 ## Documentation
 
