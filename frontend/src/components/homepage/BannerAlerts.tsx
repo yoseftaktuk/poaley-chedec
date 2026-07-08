@@ -6,11 +6,11 @@ export function BannerAlerts({ banners }: BannerAlertsProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-[var(--space-2)]">
       {banners.map((banner) => (
         <div
           key={banner.id}
-          className="rounded-2xl border border-[var(--color-gold)] border-s-4 bg-[var(--color-cream)] p-5 text-center text-[length:var(--text-body)] leading-relaxed text-[var(--color-text)] shadow-[var(--shadow-card)]"
+          className="rounded-[var(--radius-card)] border border-[var(--color-gold)] border-s-4 bg-[var(--color-cream)] p-[var(--space-3)] text-center text-[length:var(--text-body)] leading-[var(--leading-body)] text-[var(--color-text)] shadow-[var(--shadow-card)]"
           role="alert"
         >
           {banner.message}

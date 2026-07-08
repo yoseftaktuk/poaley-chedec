@@ -5,23 +5,24 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-xl text-[length:var(--text-body)] font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-navy)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 motion-safe:hover:scale-[1.02] motion-safe:active:scale-[0.98]",
+  "inline-flex items-center justify-center gap-2 rounded-[var(--radius-button)] text-[length:var(--text-body)] font-medium transition-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-navy)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 motion-safe:hover:scale-[1.02] motion-safe:active:scale-[0.98]",
   {
     variants: {
       variant: {
         default:
-          "bg-[var(--color-gold)] text-[var(--color-text)] shadow-md hover:bg-[var(--color-gold-hover)]",
+          "bg-[var(--color-gold)] text-[var(--color-text)] shadow-[var(--shadow-card)] hover:bg-[var(--color-gold-hover)]",
         outline:
           "border border-[var(--color-border)] bg-transparent text-[var(--color-navy)] hover:bg-[var(--color-cream)]",
-        secondary: "bg-white text-[var(--color-navy)] shadow-sm hover:bg-[var(--color-cream)]",
-        success: "bg-[var(--color-whatsapp)] text-white shadow-md hover:brightness-110",
-        danger: "bg-[var(--color-danger)] text-white shadow-md hover:brightness-110",
+        secondary: "bg-white text-[var(--color-navy)] shadow-[var(--shadow-card)] hover:bg-[var(--color-cream)]",
+        success: "bg-[var(--color-whatsapp)] text-white shadow-[var(--shadow-card)] hover:brightness-110",
+        danger: "bg-[var(--color-danger)] text-white shadow-[var(--shadow-card)] hover:brightness-110",
         ghost: "text-[var(--color-navy)] hover:bg-[var(--color-cream)]",
       },
       size: {
         default: "h-11 px-5 py-2",
         sm: "h-9 px-4 text-[length:var(--text-small)]",
         lg: "h-12 min-h-12 px-8 py-3 text-lg",
+        xl: "h-14 min-h-14 px-10 py-4 text-lg",
       },
     },
     defaultVariants: {

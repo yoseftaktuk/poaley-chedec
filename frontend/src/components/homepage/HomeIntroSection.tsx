@@ -16,16 +16,16 @@ export function HomeIntroSection({ banners, rabbiName, message }: HomeIntroSecti
   const { ref, visible } = useFadeUpOnScroll();
 
   return (
-    <Section background="white">
+    <Section background="white" className="border-b border-[var(--color-border)]">
       <div ref={ref} className={cn(visible && "animate-fade-up")}>
         {banners.length > 0 && (
-          <div className="mb-10">
+          <div className="mb-[var(--space-6)]">
             <BannerAlerts banners={banners} />
           </div>
         )}
         <SectionHeader icon={BookOpen} title={`דברי הרב ${rabbiName}`} />
         <Card hoverable={false} className="border-s-4 border-s-[var(--color-gold)]">
-          <blockquote className="font-display text-[length:var(--text-body)] leading-loose text-[var(--color-text)]">
+          <blockquote className="font-display text-[length:var(--text-body)] leading-[var(--leading-loose)] text-[var(--color-text)]">
             {message}
           </blockquote>
         </Card>

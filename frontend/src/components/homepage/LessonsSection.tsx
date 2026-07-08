@@ -19,32 +19,32 @@ interface LessonCardProps {
 const LessonCard = memo(function LessonCard({ lesson, contactPath }: LessonCardProps) {
   return (
     <Card className="flex flex-col">
-      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-cream)] text-[var(--color-navy)]">
-        <BookOpen size={22} aria-hidden="true" />
+      <div className="mb-[var(--space-4)] flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-cream)] text-[var(--color-navy)]">
+        <BookOpen size={24} aria-hidden="true" />
       </div>
-      <h3 className="mb-2 font-display text-[length:var(--text-card-title)] font-bold text-[var(--color-navy)]">
+      <h3 className="mb-[var(--space-2)] font-display text-[length:var(--text-card-title)] font-bold leading-[var(--leading-tight)] text-[var(--color-navy)]">
         {lesson.lesson_name}
       </h3>
-      <p className="mb-3 text-[length:var(--text-small)] text-[var(--color-text)]/70">
+      <p className="mb-[var(--space-4)] text-[length:var(--text-small)] text-[var(--color-text)]/70">
         רב: {lesson.rabbi_name}
       </p>
-      <div className="mb-3 flex flex-wrap items-center gap-3 text-[length:var(--text-small)] text-[var(--color-text)]">
-        <span className="inline-flex items-center gap-1.5">
+      <div className="mb-[var(--space-4)] flex flex-wrap items-center gap-[var(--space-4)] text-[length:var(--text-small)] text-[var(--color-text)]">
+        <span className="inline-flex items-center gap-[var(--space-2)]">
           <Calendar size={16} className="text-[var(--color-gold)]" aria-hidden="true" />
           {formatDaysOfWeek(lesson.days_of_week)}
         </span>
-        <span className="inline-flex items-center gap-1.5">
+        <span className="inline-flex items-center gap-[var(--space-2)]">
           <Clock size={16} className="text-[var(--color-gold)]" aria-hidden="true" />
           {lesson.lesson_time}
         </span>
       </div>
       {lesson.description && (
-        <p className="mb-6 line-clamp-3 flex-1 text-[length:var(--text-body)] leading-relaxed text-[var(--color-text)]">
+        <p className="mb-[var(--space-6)] line-clamp-3 flex-1 text-[length:var(--text-body)] leading-[var(--leading-body)] text-[var(--color-text)]">
           {lesson.description}
         </p>
       )}
-      <div className="mt-auto pt-2">
-        <Button asChild variant="outline" size="sm">
+      <div className="mt-auto">
+        <Button asChild variant="outline">
           <Link to={contactPath} className="no-underline">
             פרטים נוספים
             <ArrowLeft size={16} aria-hidden="true" />
@@ -62,7 +62,7 @@ export function LessonsSection({ lessons, contactPath }: LessonsSectionProps) {
     <Section background="cream" id="lessons">
       <div ref={ref} className={cn(visible && "animate-fade-up")}>
         <SectionHeader icon={BookOpen} title="שיעורי תורה" />
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-[var(--space-4)] md:grid-cols-2">
           {lessons.map((lesson) => (
             <LessonCard key={lesson.id} lesson={lesson} contactPath={contactPath} />
           ))}

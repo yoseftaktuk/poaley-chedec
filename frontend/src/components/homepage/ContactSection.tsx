@@ -1,8 +1,9 @@
-import { ExternalLink, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { ExternalLink, Mail, MapPin, Phone } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/Card";
 import { Section, SectionHeader } from "@/components/ui/Section";
+import { SocialLinks } from "@/components/ui/SocialLinks";
 import { useFadeUpOnScroll } from "@/hooks/useFadeUpOnScroll";
 import type { ContactSectionProps } from "@/types/homepage";
 import { cn } from "@/lib/utils";
@@ -15,10 +16,10 @@ export function ContactSection({ contact, whatsappUrl }: ContactSectionProps) {
       <div ref={ref} className={cn(visible && "animate-fade-up")}>
         <SectionHeader icon={MapPin} title="מיקום" />
         <Card hoverable={false}>
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-4">
+          <div className="grid gap-[var(--space-4)] md:grid-cols-2">
+            <div className="space-y-[var(--space-3)]">
               {contact.address && (
-                <p className="flex items-start gap-3 text-[length:var(--text-body)] leading-relaxed text-[var(--color-text)]">
+                <p className="flex items-start gap-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--leading-body)] text-[var(--color-text)]">
                   <MapPin size={20} className="mt-0.5 shrink-0 text-[var(--color-gold)]" aria-hidden="true" />
                   {contact.address}
                 </p>
@@ -27,7 +28,7 @@ export function ContactSection({ contact, whatsappUrl }: ContactSectionProps) {
                 <p>
                   <a
                     href={`tel:${contact.phone}`}
-                    className="inline-flex items-center gap-3 text-[length:var(--text-body)] no-underline hover:underline"
+                    className="inline-flex items-center gap-[var(--space-3)] text-[length:var(--text-body)] no-underline hover:underline"
                   >
                     <Phone size={20} className="shrink-0 text-[var(--color-gold)]" aria-hidden="true" />
                     {contact.phone}
@@ -38,7 +39,7 @@ export function ContactSection({ contact, whatsappUrl }: ContactSectionProps) {
                 <p>
                   <a
                     href={`mailto:${contact.email}`}
-                    className="inline-flex items-center gap-3 text-[length:var(--text-body)] no-underline hover:underline"
+                    className="inline-flex items-center gap-[var(--space-3)] text-[length:var(--text-body)] no-underline hover:underline"
                   >
                     <Mail size={20} className="shrink-0 text-[var(--color-gold)]" aria-hidden="true" />
                     {contact.email}
@@ -46,17 +47,18 @@ export function ContactSection({ contact, whatsappUrl }: ContactSectionProps) {
                 </p>
               )}
             </div>
-            <div className="flex flex-col items-start gap-4">
-              <Button asChild variant="success">
-                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-                  <MessageCircle size={18} aria-hidden="true" />
-                  WhatsApp
-                </a>
-              </Button>
+            <div className="flex flex-col items-start gap-[var(--space-4)]">
+              <SocialLinks
+                whatsappUrl={whatsappUrl}
+                phone={contact.phone}
+                email={contact.email}
+                size="lg"
+                theme="light"
+              />
               {contact.maps_url && (
                 <Button asChild variant="outline">
                   <a href={contact.maps_url} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink size={18} aria-hidden="true" />
+                    <ExternalLink size={20} aria-hidden="true" />
                     פתח במפות Google
                   </a>
                 </Button>

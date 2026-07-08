@@ -1,5 +1,6 @@
 export const ROUTES = {
   home: "/",
+  about: "/about",
   gallery: "/gallery",
   mikveh: "/mikveh",
   contact: "/contact",
@@ -10,6 +11,7 @@ export const ROUTES = {
 
 export const NAV_ITEMS = [
   { path: ROUTES.home, label: "דף הבית" },
+  { path: ROUTES.about, label: "אודות" },
   { path: ROUTES.gallery, label: "גלריה" },
   { path: ROUTES.mikveh, label: "מקווה" },
   { path: ROUTES.contact, label: "צור קשר" },

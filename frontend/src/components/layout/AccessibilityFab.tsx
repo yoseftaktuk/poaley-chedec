@@ -30,12 +30,12 @@ export function AccessibilityFab() {
     <div ref={containerRef} className="fixed bottom-4 end-4 z-50">
       {open && (
         <div
-          className="absolute bottom-full end-0 mb-2 min-w-[220px] rounded-xl border border-[var(--color-border)] bg-white p-4 shadow-lg"
+          className="absolute bottom-full end-0 mb-[var(--space-2)] min-w-[220px] rounded-[var(--radius-card)] border border-[var(--color-border)] bg-white p-[var(--space-2)] shadow-[var(--shadow-card-hover)]"
           role="region"
           aria-label="הגדרות נגישות"
         >
-          <p className="mb-3 text-sm font-medium">נגישות</p>
-          <div className="flex flex-col gap-2">
+          <p className="mb-[var(--space-3)] text-[length:var(--text-small)] font-medium">נגישות</p>
+          <div className="flex flex-col gap-[var(--space-2)]">
             <Button
               size="sm"
               variant={fontSize === "normal" ? "default" : "outline"}
@@ -69,10 +69,10 @@ export function AccessibilityFab() {
               ניגודיות גבוהה
             </Button>
           </div>
-          <hr className="my-3 border-[var(--color-border)]" />
+          <hr className="my-[var(--space-3)] border-[var(--color-border)]" />
           <Link
             to={ROUTES.accessibility}
-            className="block text-sm no-underline hover:underline"
+            className="block text-[length:var(--text-small)] no-underline hover:underline"
             onClick={() => setOpen(false)}
           >
             הצהרת נגישות
@@ -83,7 +83,7 @@ export function AccessibilityFab() {
       <Button
         type="button"
         size="lg"
-        className="h-14 w-14 rounded-full shadow-lg"
+        className="h-14 w-14 rounded-full shadow-[var(--shadow-card-hover)]"
         aria-label="הגדרות נגישות"
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}

@@ -15,13 +15,13 @@ export function PrayerTimesSection({ prayerTimes }: PrayerTimesSectionProps) {
     <Section background="white" id="prayer-times">
       <div ref={ref} className={cn(visible && "animate-fade-up")}>
         <SectionHeader icon={Clock} title="זמני תפילות" />
-        <div className="overflow-x-auto rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-card)]">
+        <div className="overflow-x-auto rounded-[var(--radius-card)] border border-[var(--color-border)] shadow-[var(--shadow-card)]">
           <table className="w-full min-w-[480px] border-collapse text-right">
             <thead>
               <tr className="bg-[var(--color-navy)] text-white">
-                <th className="px-6 py-4 text-[length:var(--text-body)] font-semibold">תפילה</th>
-                <th className="px-6 py-4 text-[length:var(--text-body)] font-semibold">ימים</th>
-                <th className="px-6 py-4 text-[length:var(--text-body)] font-semibold">שעה</th>
+                <th className="px-[var(--space-8)] py-5 text-[length:var(--text-body)] font-semibold">תפילה</th>
+                <th className="px-[var(--space-8)] py-5 text-[length:var(--text-body)] font-semibold">ימים</th>
+                <th className="px-[var(--space-8)] py-5 text-[length:var(--text-body)] font-semibold">שעה</th>
               </tr>
             </thead>
             <tbody>
@@ -32,21 +32,21 @@ export function PrayerTimesSection({ prayerTimes }: PrayerTimesSectionProps) {
                   <tr
                     key={pt.id}
                     className={cn(
-                      "border-b border-[var(--color-border)] transition-colors last:border-b-0",
-                      isToday && "bg-[var(--color-cream)]",
+                      "border-b border-[var(--color-border)] transition-base last:border-b-0",
+                      isToday && "border-s-4 border-s-[var(--color-gold)] bg-[var(--color-cream)]",
                     )}
                     aria-current={isToday ? "true" : undefined}
                   >
-                    <td className="px-6 py-5">
-                      <span className="flex items-center justify-end gap-2 text-[length:var(--text-body)] font-medium text-[var(--color-text)]">
-                        <PrayerIcon size={18} className="shrink-0 text-[var(--color-gold)]" aria-hidden="true" />
+                    <td className="px-[var(--space-8)] py-6">
+                      <span className="flex items-center justify-end gap-[var(--space-2)] text-[length:var(--text-body)] font-medium text-[var(--color-text)]">
+                        <PrayerIcon size={20} className="shrink-0 text-[var(--color-gold)]" aria-hidden="true" />
                         {pt.prayer_name}
                       </span>
                     </td>
-                    <td className="px-6 py-5 text-[length:var(--text-body)] text-[var(--color-text)]">
+                    <td className="px-[var(--space-8)] py-6 text-[length:var(--text-body)] text-[var(--color-text)]">
                       {formatDaysOfWeek(pt.days_of_week)}
                     </td>
-                    <td className="px-6 py-5 text-[length:var(--text-body)] font-semibold text-[var(--color-navy)]">
+                    <td className="px-[var(--space-8)] py-6 text-[length:var(--text-body)] font-bold text-[var(--color-navy)]">
                       {pt.prayer_time}
                     </td>
                   </tr>

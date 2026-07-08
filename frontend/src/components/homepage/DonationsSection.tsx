@@ -14,11 +14,11 @@ export function DonationsSection({ donationUrl, donationText, contactPath }: Don
     <Section background="navy" id="donations">
       <div ref={ref} className={cn("text-center", visible && "animate-fade-up")}>
         <SectionHeader icon={Heart} title="תרומה לבית הכנסת" light className="justify-center" />
-        <p className="mx-auto mb-8 max-w-2xl text-[length:var(--text-body)] leading-relaxed text-white/85">
+        <p className="mx-auto mb-[var(--space-6)] max-w-xl text-[length:var(--text-body)] leading-[var(--leading-body)] text-white/80">
           תרומתכם מאפשרת לנו להמשיך ולקיים את פעילות בית הכנסת, שיעורי התורה והקהילה. כל תרומה,
           קטנה כגדולה, תורמת לשגשוג הקהילה.
         </p>
-        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <div className="flex flex-col items-center justify-center gap-[var(--space-3)] sm:flex-row">
           <Button asChild size="lg">
             <a href={donationUrl} target="_blank" rel="noopener noreferrer">
               <Heart size={20} aria-hidden="true" />

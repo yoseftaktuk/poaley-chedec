@@ -35,14 +35,22 @@ export interface SectionHeaderProps {
   className?: string;
   iconClassName?: string;
   light?: boolean;
+  as?: "h1" | "h2";
 }
 
-export function SectionHeader({ icon: Icon, title, className, iconClassName, light = false }: SectionHeaderProps) {
+export function SectionHeader({
+  icon: Icon,
+  title,
+  className,
+  iconClassName,
+  light = false,
+  as: Heading = "h2",
+}: SectionHeaderProps) {
   return (
-    <div className={cn("mb-8 flex items-center gap-3 md:mb-10", className)}>
+    <div className={cn("mb-[var(--space-6)] flex items-center gap-[var(--space-3)]", className)}>
       <span
         className={cn(
-          "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
+          "flex h-12 w-12 shrink-0 items-center justify-center rounded-full",
           light ? "bg-white/15 text-white" : "bg-[var(--color-cream)] text-[var(--color-navy)]",
           iconClassName,
         )}
@@ -50,14 +58,14 @@ export function SectionHeader({ icon: Icon, title, className, iconClassName, lig
       >
         <Icon size={20} />
       </span>
-      <h2
+      <Heading
         className={cn(
-          "font-display text-[length:var(--text-section-title)] font-bold leading-tight",
+          "font-display text-[length:var(--text-section-title)] font-bold leading-[var(--leading-tight)]",
           light ? "text-white" : "text-[var(--color-navy)]",
         )}
       >
         {title}
-      </h2>
+      </Heading>
     </div>
   );
 }
