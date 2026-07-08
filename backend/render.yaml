@@ -17,6 +17,18 @@ services:
         value: production
       - key: CORS_ORIGINS
         sync: false
+      - key: TIMEZONE
+        sync: false
+      - key: ZMANIM_LATITUDE
+        sync: false
+      - key: ZMANIM_LONGITUDE
+        sync: false
+      - key: ZMANIM_TZID
+        sync: false
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        sync: false
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        sync: false
       - key: ADMIN_USERS
         sync: false
       - key: SMTP_HOST

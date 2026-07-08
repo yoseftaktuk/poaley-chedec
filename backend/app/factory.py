@@ -8,6 +8,7 @@ from slowapi.errors import RateLimitExceeded
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from app.api.v1.router import api_router
+from app.schemas import ApiRootResponse
 from app.core.config import settings
 from app.core.database import Base, async_session_factory, engine
 from app.core.limiter import limiter
@@ -86,9 +87,9 @@ def create_app(*, lifespan: Callable | None = None) -> FastAPI:
     )
     app.add_middleware(SecurityHeadersMiddleware)
 
-    @app.get("/")
-    async def root():
-        return {"message": "Poalei Tzedek API", "docs": "/api/v1/docs"}
+    @app.get("/", response_model=ApiRootResponse)
+    async def root() -> ApiRootResponse:
+        return ApiRootResponse(message="Poalei Tzedek API", docs="/api/v1/docs")
 
     app.include_router(api_router, prefix="/api/v1")
     return app

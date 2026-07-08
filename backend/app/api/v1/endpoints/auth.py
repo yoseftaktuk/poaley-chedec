@@ -11,7 +11,7 @@ from app.core.security import (
     verify_password,
 )
 from app.models import User
-from app.schemas import LoginRequest, TokenResponse, UserResponse
+from app.schemas import LoginRequest, MessageResponse, TokenResponse, UserResponse
 
 router = APIRouter()
 
@@ -46,12 +46,12 @@ async def refresh_token(response: Response, db: AsyncSession = Depends(get_db)) 
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Use cookie refresh via middleware")
 
 
-@router.post("/logout")
-async def logout(response: Response) -> dict[str, str]:
+@router.post("/logout", response_model=MessageResponse)
+async def logout(response: Response) -> MessageResponse:
     response.delete_cookie("refresh_token")
-    return {"message": "התנתקת בהצלחה"}
+    return MessageResponse(message="התנתקת בהצלחה")
 
 
 @router.get("/me", response_model=UserResponse)
-async def get_me(current_user: User = Depends(get_current_user)) -> User:
-    return current_user
+async def get_me(current_user: User = Depends(get_current_user)) -> UserResponse:
+    return UserResponse.model_validate(current_user)

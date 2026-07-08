@@ -10,7 +10,13 @@ from app.services.utils import get_by_id
 @pytest.mark.asyncio
 async def test_get_by_id_returns_entity():
     entity_id = uuid.uuid4()
-    prayer = PrayerTime(id=entity_id, prayer_name="שחרית", days_of_week=[0], prayer_time="06:00")
+    prayer = PrayerTime(
+        id=entity_id,
+        prayer_name="שחרית",
+        days_of_week=[0],
+        time_mode="fixed",
+        prayer_time="06:00",
+    )
     mock_result = MagicMock()
     mock_result.scalar_one_or_none.return_value = prayer
     db = AsyncMock()

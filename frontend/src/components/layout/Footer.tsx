@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Clock, MapPin } from "lucide-react";
 
 import { SocialLinks } from "@/components/ui/SocialLinks";
+import { SiteLogo } from "@/components/ui/SiteLogo";
 import { buildWazeUrl } from "@/lib/buildWazeUrl";
 import { NAV_ITEMS, ROUTES } from "@/lib/constants";
 import { usePublicSettings } from "@/hooks/usePublicData";
@@ -21,6 +22,7 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-[var(--space-12)]">
         <div className="grid gap-[var(--space-6)] md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
+            <SiteLogo size="lg" className="mb-[var(--space-4)]" />
             <h2 className="mb-[var(--space-4)] font-display text-2xl font-bold">בית כנסת פועלי צדק</h2>
             <p className="text-[length:var(--text-body)] leading-[var(--leading-loose)] text-white/80">
               {site?.site_description || "בית כנסת ומקווה באשקלון"}

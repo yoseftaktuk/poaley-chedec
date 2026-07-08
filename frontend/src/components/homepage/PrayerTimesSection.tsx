@@ -47,7 +47,12 @@ export function PrayerTimesSection({ prayerTimes }: PrayerTimesSectionProps) {
                       {formatDaysOfWeek(pt.days_of_week)}
                     </td>
                     <td className="px-[var(--space-8)] py-6 text-[length:var(--text-body)] font-bold text-[var(--color-navy)]">
-                      {pt.prayer_time}
+                      <div>{pt.prayer_time}</div>
+                      {pt.time_mode === "zmanim" && pt.time_definition_label && (
+                        <div className="mt-1 text-[length:var(--text-small)] font-normal text-[var(--color-text)]/70">
+                          {pt.time_definition_label}
+                        </div>
+                      )}
                     </td>
                   </tr>
                 );

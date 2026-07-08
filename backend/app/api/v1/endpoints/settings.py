@@ -7,7 +7,7 @@ from app.core.audit import log_audit
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models import User
-from app.schemas import SettingResponse, SettingUpdate
+from app.schemas import PublicSettingsResponse, SettingResponse, SettingUpdate
 from app.services.seed import DEFAULT_SETTINGS, get_setting, upsert_setting
 
 router = APIRouter()
@@ -15,12 +15,10 @@ router = APIRouter()
 PUBLIC_KEYS = {"contact", "donation", "site", "seo_global", "seo_pages", "accessibility_statement", "homepage"}
 
 
-@router.get("/public")
-async def get_public_settings(db: AsyncSession = Depends(get_db)) -> dict[str, dict]:
-    result = {}
-    for key in PUBLIC_KEYS:
-        result[key] = await get_setting(db, key)
-    return result
+@router.get("/public", response_model=PublicSettingsResponse)
+async def get_public_settings(db: AsyncSession = Depends(get_db)) -> PublicSettingsResponse:
+    data = {key: await get_setting(db, key) for key in PUBLIC_KEYS}
+    return PublicSettingsResponse(**data)
 
 
 @router.get("/{section}", response_model=SettingResponse)

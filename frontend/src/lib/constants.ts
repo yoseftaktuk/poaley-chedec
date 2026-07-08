@@ -1,3 +1,8 @@
+export const SITE_LOGO = {
+  src: "/images/logo.png",
+  alt: 'לוגו קהילת פועלי צדק (ע"ר) — רחוב אפרים 52, אשקלון',
+} as const;
+
 export const ROUTES = {
   home: "/",
   about: "/about",

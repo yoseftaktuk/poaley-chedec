@@ -10,7 +10,9 @@
 ## Required Environment Variables
 
 ### Backend
-- DATABASE_URL, SECRET_KEY, CORS_ORIGINS
+- DATABASE_URL, TEST_DATABASE_URL (local pytest only), SECRET_KEY, ENVIRONMENT, CORS_ORIGINS, TIMEZONE
+- ZMANIM_LATITUDE, ZMANIM_LONGITUDE, ZMANIM_TZID (Hebcal prayer-time location)
+- ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_DAYS
 - ADMIN_USERS (JSON array)
 - SMTP_* for contact form email
 - CLOUDINARY_* for image uploads

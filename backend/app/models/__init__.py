@@ -35,7 +35,10 @@ class PrayerTime(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
     prayer_name: Mapped[str] = mapped_column(String(100))
     days_of_week: Mapped[list] = mapped_column(JSONB, default=list)
-    prayer_time: Mapped[str] = mapped_column(String(50))
+    time_mode: Mapped[str] = mapped_column(String(20), default="fixed")
+    prayer_time: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    zman_ref: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    offset_minutes: Mapped[int] = mapped_column(Integer, default=0)
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
 
 

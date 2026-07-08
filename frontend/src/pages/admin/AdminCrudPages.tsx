@@ -6,14 +6,20 @@ import { DaySelector } from "@/components/admin/DaySelector";
 import { FormActions } from "@/components/admin/FormActions";
 import { GalleryAlbumImages } from "@/components/admin/GalleryAlbumImages";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { PrayerTimeFormFields } from "@/components/admin/PrayerTimeForm";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/input";
 import { useCrudForm } from "@/hooks/useCrudForm";
 import { apiFetch } from "@/lib/api";
 import { formatDaysOfWeek } from "@/lib/formatDays";
+import {
+  buildPrayerTimePayload,
+  PRAYER_TIME_INITIAL,
+  prayerTimeToFormValues,
+} from "@/lib/prayerTimeForm";
+import { formatTimeDefinition } from "@/lib/zmanimLabels";
 import type { BannerMessage, Event, GalleryAlbum, Mikveh, OpeningSchedule, PrayerTime, TorahLesson } from "@/types";
 
-const PRAYER_INITIAL = { prayer_name: "", days_of_week: [0], prayer_time: "", sort_order: 0 };
 const LESSON_INITIAL = { lesson_name: "", rabbi_name: "", days_of_week: [0], lesson_time: "", description: "" };
 const EVENT_INITIAL = {
   title: "",
@@ -41,14 +47,15 @@ export function AdminPrayerTimesPage() {
     queryFn: () => apiFetch<PrayerTime[]>("/prayer-times"),
   });
   const { editingId, form, setForm, isEditing, startEdit, cancelEdit, resetForm } =
-    useCrudForm(PRAYER_INITIAL);
+    useCrudForm(PRAYER_TIME_INITIAL);
 
   const save = useMutation({
     mutationFn: () => {
+      const payload = buildPrayerTimePayload(form);
       if (isEditing && editingId) {
-        return apiFetch(`/prayer-times/${editingId}`, { method: "PUT", body: JSON.stringify(form) });
+        return apiFetch(`/prayer-times/${editingId}`, { method: "PUT", body: JSON.stringify(payload) });
       }
-      return apiFetch("/prayer-times", { method: "POST", body: JSON.stringify(form) });
+      return apiFetch("/prayer-times", { method: "POST", body: JSON.stringify(payload) });
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-prayer"] });
@@ -70,22 +77,7 @@ export function AdminPrayerTimesPage() {
           save.mutate();
         }}
       >
-        <div className="grid gap-3 md:grid-cols-2">
-          <div>
-            <Label>תפילה</Label>
-            <Input
-              value={form.prayer_name}
-              onChange={(e) => setForm({ ...form, prayer_name: e.target.value })}
-            />
-          </div>
-          <div>
-            <Label>שעה</Label>
-            <Input
-              value={form.prayer_time}
-              onChange={(e) => setForm({ ...form, prayer_time: e.target.value })}
-            />
-          </div>
-        </div>
+        <PrayerTimeFormFields form={form} onChange={setForm} />
         <DaySelector
           value={form.days_of_week}
           onChange={(days_of_week) => setForm({ ...form, days_of_week })}
@@ -111,16 +103,18 @@ export function AdminPrayerTimesPage() {
             label: "ימים",
             render: (item) => formatDaysOfWeek(item.days_of_week),
           },
-          { key: "prayer_time", label: "שעה" },
+          {
+            key: "time_definition_label",
+            label: "הגדרה",
+            render: (item) =>
+              item.time_mode === "zmanim"
+                ? item.time_definition_label ||
+                  formatTimeDefinition(item.zman_ref, item.offset_minutes ?? 0)
+                : "שעה קבועה",
+          },
+          { key: "prayer_time", label: "שעה מחושבת" },
         ]}
-        onEdit={(item) =>
-          startEdit(item.id, {
-            prayer_name: item.prayer_name,
-            days_of_week: item.days_of_week,
-            prayer_time: item.prayer_time,
-            sort_order: item.sort_order,
-          })
-        }
+        onEdit={(item) => startEdit(item.id, prayerTimeToFormValues(item))}
         onDelete={(id) => remove.mutate(id)}
       />
     </div>

@@ -1,10 +1,6 @@
-export interface PrayerTime {
-  id: string;
-  prayer_name: string;
-  days_of_week: number[];
-  prayer_time: string;
-  sort_order: number;
-}
+import type { PrayerTime, PrayerTimeFormValues, TimeMode, ZmanRef } from "./prayerTime";
+
+export type { PrayerTime, PrayerTimeFormValues, TimeMode, ZmanRef };
 
 export interface TorahLesson {
   id: string;

@@ -3,6 +3,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { SiteLogo } from "@/components/ui/SiteLogo";
 import { useScrollHeader } from "@/hooks/useScrollHeader";
 import { NAV_ITEMS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -22,9 +23,10 @@ export function Header() {
       <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-4">
         <Link
           to="/"
-          className="font-display text-xl font-bold text-[var(--color-navy)] no-underline md:text-2xl"
+          className="flex items-center gap-3 font-display text-xl font-bold text-[var(--color-navy)] no-underline md:text-2xl"
         >
-          בית כנסת פועלי צדק
+          <SiteLogo size="md" />
+          <span>בית כנסת פועלי צדק</span>
         </Link>
 
         <nav className="hidden items-center gap-[var(--space-4)] md:flex" aria-label="ניווט ראשי">

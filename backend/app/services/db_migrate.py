@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 async def run_schema_migrations(conn: AsyncConnection) -> None:
     await _migrate_prayer_times(conn)
+    await _migrate_prayer_times_zmanim(conn)
     await _migrate_torah_lessons(conn)
     await _migrate_banner_messages(conn)
     await _migrate_mikveh(conn)
@@ -44,6 +45,28 @@ async def _migrate_prayer_times(conn: AsyncConnection) -> None:
             text("ALTER TABLE prayer_times ADD COLUMN IF NOT EXISTS days_of_week JSONB DEFAULT '[]'")
         )
     logger.info("Migrated prayer_times to days_of_week")
+
+
+async def _migrate_prayer_times_zmanim(conn: AsyncConnection) -> None:
+    if not await _column_exists(conn, "prayer_times", "time_mode"):
+        await conn.execute(
+            text("ALTER TABLE prayer_times ADD COLUMN time_mode VARCHAR(20) DEFAULT 'fixed'")
+        )
+        await conn.execute(text("UPDATE prayer_times SET time_mode = 'fixed' WHERE time_mode IS NULL"))
+        logger.info("Added prayer_times.time_mode")
+
+    if not await _column_exists(conn, "prayer_times", "zman_ref"):
+        await conn.execute(text("ALTER TABLE prayer_times ADD COLUMN zman_ref VARCHAR(50)"))
+        logger.info("Added prayer_times.zman_ref")
+
+    if not await _column_exists(conn, "prayer_times", "offset_minutes"):
+        await conn.execute(
+            text("ALTER TABLE prayer_times ADD COLUMN offset_minutes INTEGER DEFAULT 0")
+        )
+        await conn.execute(text("UPDATE prayer_times SET offset_minutes = 0 WHERE offset_minutes IS NULL"))
+        logger.info("Added prayer_times.offset_minutes")
+
+    await conn.execute(text("ALTER TABLE prayer_times ALTER COLUMN prayer_time DROP NOT NULL"))
 
 
 async def _migrate_torah_lessons(conn: AsyncConnection) -> None:
