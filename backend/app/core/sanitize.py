@@ -1,3 +1,5 @@
+import re
+
 import bleach
 
 ALLOWED_TAGS = ["p", "br", "strong", "em", "ul", "ol", "li", "a", "h2", "h3"]
@@ -9,4 +11,10 @@ def sanitize_html(value: str) -> str:
 
 
 def sanitize_text(value: str) -> str:
-    return bleach.clean(value, tags=[], strip=True).strip()
+    without_blocks = re.sub(
+        r"<(script|style)\b[^>]*>.*?</\1>",
+        "",
+        value,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    return bleach.clean(without_blocks, tags=[], attributes={}, strip=True).strip()

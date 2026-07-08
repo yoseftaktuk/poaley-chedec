@@ -1,10 +1,13 @@
-import asyncio
 from collections.abc import AsyncGenerator, AsyncIterator
 from contextlib import asynccontextmanager
+import asyncio
+import json
+import time
 
-import pytest
+import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.pool import NullPool
 
 from app.core.config import settings
 from app.core.database import Base, get_db
@@ -13,8 +16,29 @@ from app.core.security import hash_password
 from app.factory import create_app
 from app.models import User
 
-test_engine = create_async_engine(settings.test_database_url, echo=False)
-TestSessionLocal = async_sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
+_DEBUG_LOG = "/Users/natankatz/poaley-chedec/.cursor/debug-d00f51.log"
+
+
+def _agent_log(hypothesis_id: str, location: str, message: str, data: dict) -> None:
+    # #region agent log
+    try:
+        with open(_DEBUG_LOG, "a", encoding="utf-8") as log_file:
+            log_file.write(
+                json.dumps(
+                    {
+                        "sessionId": "d00f51",
+                        "hypothesisId": hypothesis_id,
+                        "location": location,
+                        "message": message,
+                        "data": data,
+                        "timestamp": int(time.time() * 1000),
+                    }
+                )
+                + "\n"
+            )
+    except OSError:
+        pass
+    # #endregion
 
 
 @asynccontextmanager
@@ -22,27 +46,26 @@ async def _test_lifespan(_app) -> AsyncIterator[None]:
     yield
 
 
-@pytest.fixture(scope="session")
-def event_loop():
-    policy = asyncio.get_event_loop_policy()
-    loop = policy.new_event_loop()
-    yield loop
-    loop.close()
-
-
-@pytest.fixture(scope="session", autouse=True)
-async def prepare_database():
-    async with test_engine.begin() as conn:
+@pytest_asyncio.fixture(scope="session")
+async def test_engine():
+    # #region agent log
+    _agent_log("A", "conftest.py:test_engine", "creating test engine", {"loop_id": id(asyncio.get_running_loop())})
+    # #endregion
+    engine = create_async_engine(settings.test_database_url, echo=False, poolclass=NullPool)
+    async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
-    yield
-    async with test_engine.begin() as conn:
+    yield engine
+    async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
-    await test_engine.dispose()
+    await engine.dispose()
 
 
-@pytest.fixture
-async def db_session() -> AsyncGenerator[AsyncSession, None]:
+@pytest_asyncio.fixture
+async def db_session(test_engine) -> AsyncGenerator[AsyncSession, None]:
+    # #region agent log
+    _agent_log("B", "conftest.py:db_session", "opening db session", {"loop_id": id(asyncio.get_running_loop())})
+    # #endregion
     connection = await test_engine.connect()
     transaction = await connection.begin()
     session = AsyncSession(
@@ -58,8 +81,11 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
         await connection.close()
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
+    # #region agent log
+    _agent_log("C", "conftest.py:client", "creating httpx client", {"loop_id": id(asyncio.get_running_loop())})
+    # #endregion
     limiter.enabled = False
 
     async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
@@ -76,7 +102,7 @@ async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
     limiter.enabled = True
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def admin_user(db_session: AsyncSession) -> User:
     user = User(username="testadmin", password_hash=hash_password("testpass123"))
     db_session.add(user)
@@ -85,7 +111,7 @@ async def admin_user(db_session: AsyncSession) -> User:
     return user
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def auth_headers(client: AsyncClient, admin_user: User) -> dict[str, str]:
     response = await client.post(
         "/api/v1/auth/login",
