@@ -96,6 +96,7 @@ backend/tests/
 
 - Tests use a **separate test database** — never production
 - Each test runs in a **rolled-back transaction** for isolation
+- API `commit()` calls use savepoints — data is rolled back after each test
 - Rate limiter is disabled in tests
 - Mock external services (Cloudinary, SMTP) — never call real APIs
 - Use `auth_headers` fixture for protected endpoints

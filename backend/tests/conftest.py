@@ -45,7 +45,11 @@ async def prepare_database():
 async def db_session() -> AsyncGenerator[AsyncSession, None]:
     connection = await test_engine.connect()
     transaction = await connection.begin()
-    session = AsyncSession(bind=connection, expire_on_commit=False)
+    session = AsyncSession(
+        bind=connection,
+        expire_on_commit=False,
+        join_transaction_mode="create_savepoint",
+    )
     try:
         yield session
     finally:
