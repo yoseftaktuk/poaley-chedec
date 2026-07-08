@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Link, NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { useLogout } from "@/hooks/useAuth";
@@ -71,9 +71,14 @@ export function AdminLayout() {
             </NavLink>
           ))}
         </nav>
-        <Button variant="outline" className="mt-6 w-full" onClick={handleLogout}>
-          התנתק
-        </Button>
+        <div className="mt-6 space-y-2">
+          <Button variant="outline" className="w-full" asChild>
+            <Link to="/">לחזרה לאתר</Link>
+          </Button>
+          <Button variant="outline" className="w-full" onClick={handleLogout}>
+            התנתק
+          </Button>
+        </div>
       </aside>
       <main className="flex-1 p-6">
         <Outlet />

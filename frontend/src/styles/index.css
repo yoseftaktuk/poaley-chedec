@@ -154,6 +154,17 @@ footer a:not(.social-link):hover {
   }
 }
 
+/* Overrides .card padding so media can sit edge-to-edge (Tailwind p-0 loses to .card) */
+.card-flush {
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .card-flush {
+    padding: 0;
+  }
+}
+
 :root[data-theme="dark"] .card {
   background-color: var(--color-muted);
 }

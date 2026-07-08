@@ -32,8 +32,8 @@ async def test_fetch_daily_zmanim_parses_hebcal_response():
             "alotHaShachar": "2026-07-08T04:12:00+03:00",
             "sunrise": "2026-07-08T05:42:00+03:00",
             "sunset": "2026-07-08T19:48:00+03:00",
-            "tzeit": "2026-07-08T20:25:00+03:00",
-            "chatzos": "2026-07-08T12:55:00+03:00",
+            "tzeit42min": "2026-07-08T20:25:00+03:00",
+            "chatzot": "2026-07-08T12:55:00+03:00",
         }
     }
 
@@ -51,6 +51,7 @@ async def test_fetch_daily_zmanim_parses_hebcal_response():
 
     assert ZmanRef.SUNRISE in result
     assert format_time_hhmm(result[ZmanRef.SUNSET]) == "19:48"
+    assert format_time_hhmm(result[ZmanRef.TZEIT]) == "20:25"
     assert format_time_hhmm(apply_offset(result[ZmanRef.SUNSET], 20)) == "20:08"
 
     # second call uses cache

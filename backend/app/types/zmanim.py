@@ -16,8 +16,8 @@ HEBCAL_FIELD_MAP: dict[ZmanRef, str] = {
     ZmanRef.ALOT_HASHACHAR: "alotHaShachar",
     ZmanRef.SUNRISE: "sunrise",
     ZmanRef.SUNSET: "sunset",
-    ZmanRef.TZEIT: "tzeit",
-    ZmanRef.CHATZOT: "chatzos",
+    ZmanRef.TZEIT: "tzeit42min",
+    ZmanRef.CHATZOT: "chatzot",
 }
 
 ZMAN_REF_LABELS_HE: dict[ZmanRef, str] = {
