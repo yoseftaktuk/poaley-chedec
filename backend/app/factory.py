@@ -1,6 +1,5 @@
 from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
-from urllib.parse import urlparse
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,7 +9,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from app.api.v1.router import api_router
 from app.schemas import ApiRootResponse
-from app.core.config import classify_database_host, settings
+from app.core.config import settings
 from app.core.database import Base, async_session_factory, engine
 from app.core.limiter import limiter
 from app.services.db_migrate import run_schema_migrations
@@ -55,21 +54,11 @@ class SecurityHeadersMiddleware:
 def _default_lifespan_context() -> Callable:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-        try:
-            async with engine.begin() as conn:
-                await conn.run_sync(Base.metadata.create_all)
-                await run_schema_migrations(conn)
-            async with async_session_factory() as session:
-                await run_seed(session)
-        except OSError as exc:
-            # #region agent log
-            host = urlparse(settings.database_url).hostname
-            print(
-                f'[debug-1545be] {{"sessionId":"1545be","runId":"pre-fix","hypothesisId":"C","location":"factory.py:lifespan","message":"DB connect OSError","data":{{"errno":{getattr(exc, "errno", None)},"hostKind":"{classify_database_host(host)}","isProduction":{str(settings.is_production).lower()}}}}}',
-                flush=True,
-            )
-            # #endregion
-            raise
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+            await run_schema_migrations(conn)
+        async with async_session_factory() as session:
+            await run_seed(session)
         yield
         await engine.dispose()
 

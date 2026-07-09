@@ -1,7 +1,7 @@
 """Application settings loaded from environment variables (see .env.example)."""
 
 import ssl
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import urlparse
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -31,18 +31,13 @@ def classify_database_host(hostname: str | None) -> str:
     return "other"
 
 
-def database_connect_args(url: str, *, is_production: bool) -> dict:
-    """asyncpg connect_args for hosted Postgres (Supabase, Render, etc.)."""
-    if not is_production:
-        return {}
-
+def database_connect_args(url: str) -> dict:
+    """asyncpg connect_args based on database host (Supabase, Render, local, etc.)."""
     parsed = urlparse(url)
     host_kind = classify_database_host(parsed.hostname)
-    query = parse_qs(parsed.query)
-    sslmode = (query.get("sslmode") or [""])[0].lower()
     port = parsed.port or 5432
 
-    if host_kind == "local":
+    if host_kind in {"local", "missing"}:
         return {}
 
     if host_kind == "render_internal":
@@ -50,14 +45,8 @@ def database_connect_args(url: str, *, is_production: bool) -> dict:
 
     connect_args: dict = {"ssl": ssl.create_default_context()}
 
-    if host_kind == "supabase" or host_kind in {"render_external", "other"} or sslmode in {
-        "require",
-        "verify-ca",
-        "verify-full",
-    }:
-        # Supabase pooler (port 6543) needs prepared statement cache disabled for asyncpg.
-        if host_kind == "supabase" and (port == 6543 or "pooler" in (parsed.hostname or "")):
-            connect_args["statement_cache_size"] = 0
+    if host_kind == "supabase" and (port == 6543 or "pooler" in (parsed.hostname or "")):
+        connect_args["statement_cache_size"] = 0
 
     return connect_args
 
