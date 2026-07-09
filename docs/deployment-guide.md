@@ -12,16 +12,16 @@ Production uses **Supabase Postgres**, not Render Postgres. In **Render → API 
 
 | Variable | Value |
 |----------|--------|
-| `DATABASE_URL` | Supabase direct URI (port **5432**) |
+| `DATABASE_URL` | Supabase **pooler** URI (port **6543**, Transaction mode) |
 | `ENVIRONMENT` | `production` |
 
-Example `DATABASE_URL` format (replace password; percent-encode special characters):
+Example `DATABASE_URL` format (replace password; percent-encode `@` as `%40`):
 
 ```
-postgresql://postgres:[YOUR-PASSWORD]@db.eyagbvsdxbfpvrgdkbbs.supabase.co:5432/postgres
+postgresql://postgres.eyagbvsdxbfpvrgdkbbs:[YOUR-PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres
 ```
 
-The backend normalizes `postgresql://` to `postgresql+asyncpg://` and applies SSL automatically for Supabase hosts.
+Use **Connection pooling → Transaction** in the Supabase dashboard. Direct `db.*.supabase.co:5432` fails on Render (IPv6). The backend normalizes `postgresql://` to `postgresql+asyncpg://` and applies `ssl=require` for Supabase.
 
 ## Required Environment Variables
 

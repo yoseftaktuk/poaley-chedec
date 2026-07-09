@@ -43,12 +43,13 @@ def database_connect_args(url: str) -> dict:
     if host_kind == "render_internal":
         return {"ssl": False}
 
-    connect_args: dict = {"ssl": ssl.create_default_context()}
+    if host_kind == "supabase":
+        connect_args: dict = {"ssl": "require"}
+        if port == 6543 or "pooler" in (parsed.hostname or ""):
+            connect_args["statement_cache_size"] = 0
+        return connect_args
 
-    if host_kind == "supabase" and (port == 6543 or "pooler" in (parsed.hostname or "")):
-        connect_args["statement_cache_size"] = 0
-
-    return connect_args
+    return {"ssl": ssl.create_default_context()}
 
 
 class Settings(BaseSettings):

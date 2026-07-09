@@ -36,22 +36,23 @@ def test_database_connect_args_render_internal_disables_ssl():
     assert database_connect_args(url) == {"ssl": False}
 
 
-def test_database_connect_args_supabase_uses_ssl_context():
+def test_database_connect_args_supabase_uses_ssl_require():
     url = "postgresql+asyncpg://user:pass@db.abcdefgh.supabase.co:5432/postgres"
     args = database_connect_args(url)
-    assert isinstance(args["ssl"], ssl.SSLContext)
+    assert args["ssl"] == "require"
+    assert "statement_cache_size" not in args
 
 
-def test_database_connect_args_supabase_direct_host_uses_ssl_without_production_flag():
+def test_database_connect_args_supabase_direct_host_uses_ssl_require():
     args = database_connect_args(SUPABASE_DIRECT_URL)
-    assert isinstance(args["ssl"], ssl.SSLContext)
+    assert args["ssl"] == "require"
     assert "statement_cache_size" not in args
 
 
 def test_database_connect_args_supabase_pooler_disables_statement_cache():
     url = "postgresql+asyncpg://user:pass@aws-0-eu-central-1.pooler.supabase.com:6543/postgres"
     args = database_connect_args(url)
-    assert isinstance(args["ssl"], ssl.SSLContext)
+    assert args["ssl"] == "require"
     assert args["statement_cache_size"] == 0
 
 
