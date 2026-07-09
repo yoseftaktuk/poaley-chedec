@@ -1,4 +1,4 @@
-from app.core.config import Settings, classify_database_host, database_connect_args, normalize_database_url
+from app.core.config import Settings, classify_database_host, database_connect_args, is_supabase_pooler, normalize_database_url
 import ssl
 
 SUPABASE_DIRECT_URL = (
@@ -54,6 +54,19 @@ def test_database_connect_args_supabase_pooler_disables_statement_cache():
     args = database_connect_args(url)
     assert args["ssl"] == "require"
     assert args["statement_cache_size"] == 0
+    assert args["prepared_statement_cache_size"] == 0
+    assert "prepared_statement_name_func" in args
+    name_a = args["prepared_statement_name_func"]()
+    name_b = args["prepared_statement_name_func"]()
+    assert name_a != name_b
+    assert name_a.startswith("__asyncpg_")
+
+
+def test_is_supabase_pooler_detects_pooler_host_and_port():
+    pooler_url = "postgresql+asyncpg://user:pass@aws-0-eu-central-1.pooler.supabase.com:6543/postgres"
+    direct_url = "postgresql+asyncpg://user:pass@db.abcdefgh.supabase.co:5432/postgres"
+    assert is_supabase_pooler(pooler_url) is True
+    assert is_supabase_pooler(direct_url) is False
 
 
 def test_database_connect_args_render_external_requires_ssl():
