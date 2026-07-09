@@ -17,6 +17,12 @@ def test_hash_and_verify_password():
     assert not verify_password("wrong", hashed)
 
 
+def test_verify_password_accepts_legacy_bcrypt_hash():
+    legacy_hash = "$2b$12$9fFTTEaYzxFtz7GK8TwVxOMGaVczkR0HWbPD/oMf64S5YlMS43vZu"
+    assert verify_password("secret123", legacy_hash)
+    assert not verify_password("wrong", legacy_hash)
+
+
 def test_create_and_decode_access_token():
     import uuid
 

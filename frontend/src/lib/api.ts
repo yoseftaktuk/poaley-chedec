@@ -40,27 +40,7 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
     (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
   }
 
-  const requestUrl = `${API_BASE_URL}${path}`;
-  // #region agent log
-  if (!(globalThis as { __apiDebugLogged?: boolean }).__apiDebugLogged) {
-    (globalThis as { __apiDebugLogged?: boolean }).__apiDebugLogged = true;
-    fetch("http://127.0.0.1:7692/ingest/4d309d4e-7975-426c-8ff0-d9cc7d6ed167", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "1545be" },
-      body: JSON.stringify({
-        sessionId: "1545be",
-        location: "api.ts:apiFetch",
-        message: "api request url",
-        data: { apiBaseUrl: API_BASE_URL, path, requestUrl },
-        timestamp: Date.now(),
-        runId: "pre-fix",
-        hypothesisId: "A",
-      }),
-    }).catch(() => {});
-  }
-  // #endregion
-
-  const response = await fetch(requestUrl, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
     headers,
     credentials: "include",
