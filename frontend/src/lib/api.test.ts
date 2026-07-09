@@ -1,8 +1,27 @@
 import { http, HttpResponse } from "msw";
 import { describe, expect, it, vi } from "vitest";
 
-import { formatApiErrorDetail, ApiError, apiFetch, apiUpload } from "@/lib/api";
+import { formatApiErrorDetail, ApiError, apiFetch, apiUpload, resolveApiBaseUrl } from "@/lib/api";
 import { server } from "@/test/mocks/server";
+
+describe("resolveApiBaseUrl", () => {
+  it("keeps url that already ends with /api/v1", () => {
+    expect(resolveApiBaseUrl("http://localhost:8000/api/v1")).toBe("http://localhost:8000/api/v1");
+    expect(resolveApiBaseUrl("https://poaley-chedec-1.onrender.com/api/v1/")).toBe(
+      "https://poaley-chedec-1.onrender.com/api/v1",
+    );
+  });
+
+  it("appends /api/v1 when missing from production host", () => {
+    expect(resolveApiBaseUrl("https://poaley-chedec-1.onrender.com")).toBe(
+      "https://poaley-chedec-1.onrender.com/api/v1",
+    );
+  });
+
+  it("uses localhost default when env is empty", () => {
+    expect(resolveApiBaseUrl(undefined)).toBe("http://localhost:8000/api/v1");
+  });
+});
 
 describe("formatApiErrorDetail", () => {
   it("returns string detail as-is", () => {

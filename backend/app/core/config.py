@@ -1,43 +1,11 @@
 """Application settings loaded from environment variables (see .env.example)."""
 
-import json
 import ssl
-import sys
-import time
 from urllib.parse import urlparse
 from uuid import uuid4
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-_DEBUG_LOG_PATH = "/Users/natankatz/poaley-chedec/.cursor/debug-1545be.log"
-
-
-def _agent_debug_log(
-    location: str,
-    message: str,
-    data: dict,
-    hypothesis_id: str,
-    run_id: str = "pre-fix",
-) -> None:
-    # #region agent log
-    payload = {
-        "sessionId": "1545be",
-        "timestamp": int(time.time() * 1000),
-        "location": location,
-        "message": message,
-        "data": data,
-        "runId": run_id,
-        "hypothesisId": hypothesis_id,
-    }
-    line = json.dumps(payload) + "\n"
-    try:
-        with open(_DEBUG_LOG_PATH, "a", encoding="utf-8") as f:
-            f.write(line)
-    except OSError:
-        pass
-    sys.stderr.write(f"[agent-debug] {line}")
-    # #endregion
 
 
 def normalize_database_url(url: str) -> str:
@@ -77,22 +45,7 @@ def database_connect_args(url: str) -> dict:
     """asyncpg connect_args based on database host (Supabase, Render, local, etc.)."""
     parsed = urlparse(url)
     host_kind = classify_database_host(parsed.hostname)
-    port = parsed.port or 5432
     pooler = is_supabase_pooler(url)
-
-    # #region agent log
-    _agent_debug_log(
-        "config.py:database_connect_args",
-        "computed db connect profile",
-        {
-            "hostKind": host_kind,
-            "port": port,
-            "hostnameSuffix": (parsed.hostname or "")[-40:],
-            "isPooler": pooler,
-        },
-        hypothesis_id="A",
-    )
-    # #endregion
 
     if host_kind in {"local", "missing"}:
         return {}
@@ -106,19 +59,6 @@ def database_connect_args(url: str) -> dict:
             connect_args["statement_cache_size"] = 0
             connect_args["prepared_statement_cache_size"] = 0
             connect_args["prepared_statement_name_func"] = lambda: f"__asyncpg_{uuid4()}__"
-        # #region agent log
-        _agent_debug_log(
-            "config.py:database_connect_args",
-            "supabase connect_args keys",
-            {
-                "keys": sorted(connect_args.keys()),
-                "hasStatementCacheZero": connect_args.get("statement_cache_size") == 0,
-                "hasPreparedCacheZero": connect_args.get("prepared_statement_cache_size") == 0,
-                "hasUniqueNameFunc": "prepared_statement_name_func" in connect_args,
-            },
-            hypothesis_id="B",
-        )
-        # #endregion
         return connect_args
 
     return {"ssl": ssl.create_default_context()}

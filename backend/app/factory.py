@@ -54,52 +54,11 @@ class SecurityHeadersMiddleware:
 def _default_lifespan_context() -> Callable:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-        # #region agent log
-        import json
-        import sys
-        import time
-
-        def _lifespan_log(message: str, data: dict, hypothesis_id: str) -> None:
-            payload = {
-                "sessionId": "1545be",
-                "timestamp": int(time.time() * 1000),
-                "location": "factory.py:lifespan",
-                "message": message,
-                "data": data,
-                "runId": "pre-fix",
-                "hypothesisId": hypothesis_id,
-            }
-            line = json.dumps(payload) + "\n"
-            try:
-                with open(
-                    "/Users/natankatz/poaley-chedec/.cursor/debug-1545be.log",
-                    "a",
-                    encoding="utf-8",
-                ) as f:
-                    f.write(line)
-            except OSError:
-                pass
-            sys.stderr.write(f"[agent-debug] {line}")
-
-        # #endregion
-        try:
-            async with engine.begin() as conn:
-                await conn.run_sync(Base.metadata.create_all)
-                await run_schema_migrations(conn)
-            async with async_session_factory() as session:
-                await run_seed(session)
-            # #region agent log
-            _lifespan_log("application startup completed", {"ok": True}, "D")
-            # #endregion
-        except Exception as exc:
-            # #region agent log
-            _lifespan_log(
-                "application startup failed",
-                {"ok": False, "errorType": type(exc).__name__},
-                "D",
-            )
-            # #endregion
-            raise
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+            await run_schema_migrations(conn)
+        async with async_session_factory() as session:
+            await run_seed(session)
         yield
         await engine.dispose()
 

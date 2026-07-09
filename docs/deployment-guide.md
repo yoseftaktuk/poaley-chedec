@@ -36,7 +36,7 @@ Use **Connection pooling → Transaction** in the Supabase dashboard. Direct `db
 - `CLOUDINARY_*` for image uploads
 
 ### Frontend
-- `VITE_API_BASE_URL` (production API URL)
+- `VITE_API_BASE_URL` — backend URL **including** `/api/v1` (e.g. `https://your-api.onrender.com/api/v1`). If you set only the host (e.g. `https://your-api.onrender.com`), the frontend appends `/api/v1` automatically at build time.
 
 ## Docker Local
 
