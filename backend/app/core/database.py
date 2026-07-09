@@ -6,7 +6,12 @@ import os
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
-from app.core.config import normalize_database_url, settings
+from app.core.config import (
+    classify_database_host,
+    database_connect_args,
+    normalize_database_url,
+    settings,
+)
 
 
 class Base(DeclarativeBase):
@@ -43,34 +48,47 @@ def _scheme_only(url: str | None) -> dict:
         "scheme": parsed.scheme,
         "has_asyncpg": "+asyncpg" in (parsed.scheme or ""),
         "has_psycopg2": "psycopg2" in (parsed.scheme or ""),
+        "hostKind": classify_database_host(parsed.hostname),
+        "port": parsed.port or 5432,
+        "hasSslMode": "sslmode" in (parsed.query or ""),
     }
 
 
 _env_raw = os.environ.get("DATABASE_URL")
+_connect_args = database_connect_args(settings.database_url, is_production=settings.is_production)
 # #region agent log
 _debug_log(
-    "A",
+    "B",
     "database.py:before_engine",
-    "Env vs settings DATABASE_URL schemes",
+    "DATABASE_URL host classification and connect_args",
     {
         "env": _scheme_only(_env_raw),
         "settings": _scheme_only(settings.database_url),
-        "normalized_from_env": _scheme_only(normalize_database_url(_env_raw) if _env_raw else ""),
+        "isProduction": settings.is_production,
+        "connectArgsSsl": type(_connect_args.get("ssl")).__name__ if _connect_args.get("ssl") else None,
+        "statementCacheSize": _connect_args.get("statement_cache_size"),
     },
 )
 # #endregion
 
 try:
-    engine = create_async_engine(settings.database_url, echo=settings.environment == "development")
+    engine = create_async_engine(
+        settings.database_url,
+        echo=settings.environment == "development",
+        connect_args=_connect_args,
+        pool_pre_ping=True,
+    )
     # #region agent log
     _debug_log(
-        "A",
+        "B",
         "database.py:engine_ok",
         "create_async_engine succeeded",
         {
             "dialect": str(engine.dialect.name),
             "driver": str(getattr(engine.dialect, "driver", None)),
             "settings_scheme": urlparse(settings.database_url).scheme,
+            "connectArgsSsl": type(_connect_args.get("ssl")).__name__ if _connect_args.get("ssl") else None,
+            "statementCacheSize": _connect_args.get("statement_cache_size"),
         },
         run_id="post-fix",
     )

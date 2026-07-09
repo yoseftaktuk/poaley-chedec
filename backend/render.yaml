@@ -8,9 +8,7 @@ services:
     healthCheckPath: /api/v1/health
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: poaley-chedec-db
-          property: connectionString
+        sync: false
       - key: SECRET_KEY
         generateValue: true
       - key: ENVIRONMENT
@@ -49,9 +47,3 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
-
-databases:
-  - name: poaley-chedec-db
-    plan: free
-    databaseName: poaley_chedec
-    user: poaley_chedec

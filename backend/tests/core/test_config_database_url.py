@@ -1,4 +1,5 @@
-from app.core.config import Settings, normalize_database_url
+from app.core.config import Settings, classify_database_host, database_connect_args, normalize_database_url
+import ssl
 
 
 def test_normalize_database_url_adds_asyncpg_for_render_style():
@@ -11,6 +12,42 @@ def test_normalize_database_url_adds_asyncpg_for_render_style():
 def test_normalize_database_url_keeps_asyncpg():
     url = "postgresql+asyncpg://user:pass@host/db"
     assert normalize_database_url(url) == url
+
+
+def test_classify_database_host():
+    assert classify_database_host("localhost") == "local"
+    assert classify_database_host("dpg-abc123-a") == "render_internal"
+    assert classify_database_host("dpg-abc123-a.oregon-postgres.render.com") == "render_external"
+    assert classify_database_host("db.abcdefgh.supabase.co") == "supabase"
+    assert classify_database_host("aws-0-eu-central-1.pooler.supabase.com") == "supabase"
+
+
+def test_database_connect_args_render_internal_disables_ssl():
+    url = "postgresql+asyncpg://user:pass@dpg-abc123-a:5432/db"
+    assert database_connect_args(url, is_production=True) == {"ssl": False}
+
+
+def test_database_connect_args_supabase_uses_ssl_context():
+    url = "postgresql+asyncpg://user:pass@db.abcdefgh.supabase.co:5432/postgres"
+    args = database_connect_args(url, is_production=True)
+    assert isinstance(args["ssl"], ssl.SSLContext)
+
+
+def test_database_connect_args_supabase_pooler_disables_statement_cache():
+    url = "postgresql+asyncpg://user:pass@aws-0-eu-central-1.pooler.supabase.com:6543/postgres"
+    args = database_connect_args(url, is_production=True)
+    assert isinstance(args["ssl"], ssl.SSLContext)
+    assert args["statement_cache_size"] == 0
+
+
+def test_database_connect_args_render_external_requires_ssl():
+    url = "postgresql+asyncpg://user:pass@dpg-abc123-a.oregon-postgres.render.com:5432/db"
+    args = database_connect_args(url, is_production=True)
+    assert isinstance(args["ssl"], ssl.SSLContext)
+
+
+def test_database_connect_args_dev_empty():
+    assert database_connect_args("postgresql+asyncpg://user:pass@localhost/db", is_production=False) == {}
 
 
 def test_settings_normalizes_database_url_from_env(monkeypatch):
