@@ -15,12 +15,23 @@ export const ROUTES = {
   adminLogin: "/admin/login",
 } as const;
 
-export const NAV_ITEMS = [
+export const DONATE_EXTERNAL_URL = "https://www.matara.pro/nedarimplus/online/?mosad=7018669" as const;
+
+export const HEADER_NAV_ITEMS = [
   { path: ROUTES.home, label: "דף הבית" },
   { path: ROUTES.about, label: "אודות" },
   { path: ROUTES.gallery, label: "גלריה" },
   { path: ROUTES.mikveh, label: "מקווה" },
   { path: ROUTES.donate, label: "תרומה" },
+  { path: ROUTES.contact, label: "צור קשר" },
+] as const;
+
+export const FOOTER_NAV_ITEMS = [
+  { path: ROUTES.home, label: "דף הבית" },
+  { path: ROUTES.about, label: "אודות" },
+  { path: ROUTES.gallery, label: "גלריה" },
+  { path: ROUTES.mikveh, label: "מקווה" },
+  { path: DONATE_EXTERNAL_URL, label: "תרומה", external: true },
   { path: ROUTES.contact, label: "צור קשר" },
 ] as const;
 

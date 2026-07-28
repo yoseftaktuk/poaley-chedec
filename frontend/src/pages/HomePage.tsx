@@ -7,7 +7,7 @@ import { PrayerTimesSection } from "@/components/homepage/PrayerTimesSection";
 import { HeroSection } from "@/components/layout/HeroSection";
 import { useWhatsAppUrl } from "@/hooks/useWhatsAppUrl";
 import { useHomepage } from "@/hooks/usePublicData";
-import { ROUTES } from "@/lib/constants";
+import { DONATE_EXTERNAL_URL, ROUTES } from "@/lib/constants";
 
 export function HomePage() {
   const { data, isLoading, error } = useHomepage();
@@ -35,7 +35,7 @@ export function HomePage() {
       <HeroSection
         title={homepage.welcome_title}
         text={homepage.welcome_text}
-        donationUrl={donation.bit_url}
+        donationUrl={DONATE_EXTERNAL_URL}
         donationText={donation.button_text || "תרומה"}
         whatsappUrl={whatsappUrl}
       />
@@ -49,7 +49,7 @@ export function HomePage() {
       <LessonsSection lessons={torah_lessons} contactPath={ROUTES.contact} />
       <EventsSection events={events} contactPath={ROUTES.contact} />
       <DonationsSection
-        donationUrl={donation.bit_url}
+        donationUrl={DONATE_EXTERNAL_URL}
         donationText={donation.button_text || "תרומה"}
         contactPath={ROUTES.contact}
       />

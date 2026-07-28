@@ -2,6 +2,7 @@ import { http, HttpResponse } from "msw";
 import { screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
+import { DONATE_EXTERNAL_URL } from "@/lib/constants";
 import { DonatePage } from "@/pages/DonatePage";
 import { mockPublicSettings } from "@/test/mocks/handlers";
 import { server } from "@/test/mocks/server";
@@ -38,7 +39,7 @@ describe("DonatePage", () => {
     });
 
     const donateLink = screen.getByRole("link", { name: /תרומה/ });
-    expect(donateLink).toHaveAttribute("href", "https://example.com/donate");
+    expect(donateLink).toHaveAttribute("href", DONATE_EXTERNAL_URL);
     expect(donateLink).toHaveAttribute("target", "_blank");
     expect(donateLink).toHaveAttribute("rel", "noopener noreferrer");
 
@@ -61,7 +62,7 @@ describe("DonatePage", () => {
     });
   });
 
-  it("hides donate button when URL is missing", async () => {
+  it("still shows donate button when URL is missing from settings", async () => {
     server.use(
       http.get(`${API_BASE}/settings/public`, () =>
         HttpResponse.json({
@@ -76,7 +77,7 @@ describe("DonatePage", () => {
       expect(screen.getByRole("heading", { name: "תרומה" })).toBeInTheDocument();
     });
 
-    expect(screen.queryByRole("link", { name: /תרומה לבית הכנסת/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /תרומה לבית הכנסת/ })).toHaveAttribute("href", DONATE_EXTERNAL_URL);
     expect(screen.getByRole("link", { name: "צור קשר" })).toBeInTheDocument();
   });
 
@@ -92,7 +93,7 @@ describe("DonatePage", () => {
       expect(screen.getByRole("heading", { name: "תרומה" })).toBeInTheDocument();
     });
 
-    expect(screen.queryByRole("link", { name: /תרומה/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /תרומה/ })).toHaveAttribute("href", DONATE_EXTERNAL_URL);
     expect(screen.getByRole("link", { name: "צור קשר" })).toBeInTheDocument();
   });
 });

@@ -1,33 +1,11 @@
 """Application settings loaded from environment variables (see .env.example)."""
 
-import json
 import ssl
-import time
 from urllib.parse import urlparse
 from uuid import uuid4
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-
-def _debug_log(location: str, message: str, data: dict, hypothesis_id: str) -> None:
-    # #region agent log
-    payload = {
-        "sessionId": "1545be",
-        "timestamp": int(time.time() * 1000),
-        "location": location,
-        "message": message,
-        "data": data,
-        "runId": "pre-fix",
-        "hypothesisId": hypothesis_id,
-    }
-    line = json.dumps(payload, separators=(",", ":")) + "\n"
-    try:
-        with open("/Users/natankatz/poaley-chedec/.cursor/debug-1545be.log", "a", encoding="utf-8") as fh:
-            fh.write(line)
-    except OSError:
-        pass
-    # #endregion
 
 
 def normalize_database_url(url: str) -> str:
@@ -68,25 +46,6 @@ def database_connect_args(url: str) -> dict:
     parsed = urlparse(url)
     host_kind = classify_database_host(parsed.hostname)
     pooler = is_supabase_pooler(url)
-    username = parsed.username or ""
-    username_parts = username.split(".") if username else []
-
-    # #region agent log
-    _debug_log(
-        "config.py:database_connect_args",
-        "database url shape",
-        {
-            "hostKind": host_kind,
-            "hostnameTail": (parsed.hostname or "")[-40:],
-            "port": parsed.port or 5432,
-            "isPooler": pooler,
-            "usernameParts": len(username_parts),
-            "usernamePrefix": username_parts[0] if username_parts else "",
-            "usernameTail": username_parts[-1][-6:] if username_parts else "",
-        },
-        "A",
-    )
-    # #endregion
 
     if host_kind in {"local", "missing"}:
         return {}
@@ -100,17 +59,6 @@ def database_connect_args(url: str) -> dict:
             connect_args["statement_cache_size"] = 0
             connect_args["prepared_statement_cache_size"] = 0
             connect_args["prepared_statement_name_func"] = lambda: f"__asyncpg_{uuid4()}__"
-        # #region agent log
-        _debug_log(
-            "config.py:database_connect_args",
-            "supabase connect args",
-            {
-                "isPooler": pooler,
-                "connectArgKeys": sorted(connect_args.keys()),
-            },
-            "B",
-        )
-        # #endregion
         return connect_args
 
     return {"ssl": ssl.create_default_context()}

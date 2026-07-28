@@ -4,7 +4,7 @@ import { Clock, MapPin } from "lucide-react";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { SiteLogo } from "@/components/ui/SiteLogo";
 import { buildWazeUrl } from "@/lib/buildWazeUrl";
-import { NAV_ITEMS, ROUTES } from "@/lib/constants";
+import { FOOTER_NAV_ITEMS, ROUTES } from "@/lib/constants";
 import { usePublicSettings } from "@/hooks/usePublicData";
 import { useWhatsAppUrl } from "@/hooks/useWhatsAppUrl";
 
@@ -34,11 +34,22 @@ export function Footer() {
               ניווט מהיר
             </h3>
             <ul className="space-y-[var(--space-2)]">
-              {NAV_ITEMS.map((item) => (
+              {FOOTER_NAV_ITEMS.map((item) => (
                 <li key={item.path}>
-                  <Link to={item.path} className="text-[length:var(--text-small)] transition-base">
-                    {item.label}
-                  </Link>
+                  {item.external ? (
+                    <a
+                      href={item.path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[length:var(--text-small)] transition-base"
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link to={item.path} className="text-[length:var(--text-small)] transition-base">
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
               ))}
               <li>

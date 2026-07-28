@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { donatePageContent } from "@/content/donatePage";
 import { usePublicSettings } from "@/hooks/usePublicData";
-import { ROUTES } from "@/lib/constants";
+import { DONATE_EXTERNAL_URL, ROUTES } from "@/lib/constants";
 
 export function DonatePage() {
   const { data: settings, isLoading } = usePublicSettings();
@@ -12,7 +12,6 @@ export function DonatePage() {
 
   if (isLoading) return <div className="container-page">טוען...</div>;
 
-  const donationUrl = settings?.donation?.bit_url ?? "";
   const donationText = settings?.donation?.button_text || buttonFallback;
 
   return (
@@ -29,14 +28,12 @@ export function DonatePage() {
       <section className="card space-y-4">
         <h2 className="text-xl font-bold">{ctaTitle}</h2>
         <div className="flex flex-col gap-[var(--space-3)] sm:flex-row sm:items-center">
-          {donationUrl ? (
-            <Button asChild size="lg">
-              <a href={donationUrl} target="_blank" rel="noopener noreferrer">
-                <Heart size={20} aria-hidden="true" />
-                {donationText}
-              </a>
-            </Button>
-          ) : null}
+          <Button asChild size="lg">
+            <a href={DONATE_EXTERNAL_URL} target="_blank" rel="noopener noreferrer">
+              <Heart size={20} aria-hidden="true" />
+              {donationText}
+            </a>
+          </Button>
           <Button asChild variant="secondary" size="lg">
             <Link to={ROUTES.contact} className="no-underline">
               {contactLabel}

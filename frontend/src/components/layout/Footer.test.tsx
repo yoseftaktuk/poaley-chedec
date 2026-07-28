@@ -3,6 +3,7 @@ import { screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { Footer } from "@/components/layout/Footer";
+import { DONATE_EXTERNAL_URL } from "@/lib/constants";
 import { mockPublicSettings } from "@/test/mocks/handlers";
 import { server } from "@/test/mocks/server";
 import { renderWithProviders } from "@/test/utils";
@@ -17,6 +18,8 @@ describe("Footer", () => {
     });
     expect(screen.getByRole("link", { name: "אודות" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "דף הבית" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "תרומה" })).toHaveAttribute("href", DONATE_EXTERNAL_URL);
+    expect(screen.getByRole("link", { name: "תרומה" })).toHaveAttribute("target", "_blank");
   });
 
   it("omits Waze link when address is missing", async () => {

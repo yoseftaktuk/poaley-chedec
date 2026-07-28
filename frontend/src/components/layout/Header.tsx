@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SiteLogo } from "@/components/ui/SiteLogo";
 import { useScrollHeader } from "@/hooks/useScrollHeader";
-import { NAV_ITEMS } from "@/lib/constants";
+import { HEADER_NAV_ITEMS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export function Header() {
@@ -30,7 +30,7 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-[var(--space-4)] md:flex" aria-label="ניווט ראשי">
-          {NAV_ITEMS.map((item) => {
+          {HEADER_NAV_ITEMS.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <Link
@@ -71,7 +71,7 @@ export function Header() {
         aria-hidden={!open}
       >
         <ul className="space-y-[var(--space-1)] px-4 py-4">
-          {NAV_ITEMS.map((item) => {
+          {HEADER_NAV_ITEMS.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <li key={item.path}>
