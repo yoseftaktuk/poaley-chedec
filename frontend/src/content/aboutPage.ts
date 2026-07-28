@@ -43,7 +43,12 @@ export const aboutPageContent: AboutPageContent = {
     { id: "years", label: "שנות קיום", type: "counter", value: 75 },
     { id: "prayers", label: "תפילות ביום", type: "counter", value: 3 },
     { id: "classes", label: "שיעורים בשבוע", type: "counter", value: 8 },
-    { id: "members", label: "חברי קהילה", type: "text", displayText: "עשרות" },
+    {
+      id: "activities",
+      label: "",
+      type: "text",
+      displayText: "פעיליות לאורך כל ימות השנה",
+    },
   ],
   verse: {
     text: "בֵּיתִי בֵּית תְפִלָּה יִקָּרֵא לְכָל הָעַמִּים",

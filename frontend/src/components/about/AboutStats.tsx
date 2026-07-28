@@ -22,7 +22,7 @@ function StatText({ stat }: { stat: Extract<AboutStat, { type: "text" }> }) {
   return (
     <div className="about-stat">
       <p className="about-stat__value">{stat.displayText}</p>
-      <p className="about-stat__label">{stat.label}</p>
+      {stat.label ? <p className="about-stat__label">{stat.label}</p> : null}
     </div>
   );
 }

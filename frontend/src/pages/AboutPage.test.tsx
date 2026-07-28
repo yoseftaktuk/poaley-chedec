@@ -20,7 +20,7 @@ describe("AboutPage", () => {
     renderWithProviders(<AboutPage />);
     expect(screen.getByText("במספרים")).toBeInTheDocument();
     expect(screen.getByText("שנות קיום")).toBeInTheDocument();
-    expect(screen.getByText("עשרות")).toBeInTheDocument();
+    expect(screen.getByText("פעיליות לאורך כל ימות השנה")).toBeInTheDocument();
   });
 
   it("renders CTA with contact link", () => {
