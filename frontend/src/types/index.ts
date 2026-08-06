@@ -1,6 +1,8 @@
 import type { PrayerTime, PrayerTimeFormValues, TimeMode, ZmanRef } from "./prayerTime";
+import type { NavItem } from "./nav";
 
 export type { PrayerTime, PrayerTimeFormValues, TimeMode, ZmanRef };
+export type { NavItem };
 
 export interface TorahLesson {
   id: string;

@@ -36,6 +36,32 @@ export function Footer() {
             <ul className="space-y-[var(--space-2)]">
               {FOOTER_NAV_ITEMS.map((item) => (
                 <li key={item.path}>
+                  {/* #region agent log */}
+                  {(() => {
+                    fetch("http://127.0.0.1:7692/ingest/4d309d4e-7975-426c-8ff0-d9cc7d6ed167", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        "X-Debug-Session-Id": "d37347",
+                      },
+                      body: JSON.stringify({
+                        sessionId: "d37347",
+                        runId: "post-fix",
+                        hypothesisId: "H1",
+                        location: "Footer.tsx:nav-item",
+                        message: "Footer nav item render branch",
+                        data: {
+                          path: item.path,
+                          label: item.label,
+                          external: Boolean(item.external),
+                          branch: item.external ? "anchor" : "link",
+                        },
+                        timestamp: Date.now(),
+                      }),
+                    }).catch(() => {});
+                    return null;
+                  })()}
+                  {/* #endregion */}
                   {item.external ? (
                     <a
                       href={item.path}
