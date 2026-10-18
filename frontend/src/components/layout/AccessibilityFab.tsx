@@ -83,7 +83,7 @@ export function AccessibilityFab() {
       <Button
         type="button"
         size="lg"
-        className="h-14 w-14 rounded-full shadow-[var(--shadow-card-hover)]"
+        className="h-14 w-14 rounded-full p-0 shadow-[var(--shadow-card-hover)]"
         aria-label="הגדרות נגישות"
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
