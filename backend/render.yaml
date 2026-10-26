@@ -47,3 +47,19 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
+      - key: NEDARIM_MOSAD_ID
+        value: "7018669"
+      - key: NEDARIM_API_PASSWORD
+        sync: false
+      - key: NEDARIM_WEBHOOK_SECRET
+        sync: false
+      - key: NEDARIM_RECONCILE_SECRET
+        sync: false
+      - key: YEMOT_API_KEY
+        sync: false
+      - key: YEMOT_SMS_FROM
+        sync: false
+      - key: GREENAPI_ID_INSTANCE
+        sync: false
+      - key: GREENAPI_API_TOKEN
+        sync: false
