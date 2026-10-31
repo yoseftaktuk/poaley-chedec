@@ -1,7 +1,5 @@
 # Deployment Guide
 
-For Nedarim automatic receipt SMS/WhatsApp setup, see [nedarim-receipts.md](nedarim-receipts.md).
-
 ## Render Setup
 
 1. Deploy backend from `backend/` using `render.yaml` (Docker)

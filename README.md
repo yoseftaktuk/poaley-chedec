@@ -51,7 +51,3 @@ See [docs/testing.md](docs/testing.md) for full testing guide, coverage reports,
 ## Documentation
 
 See `docs/` for SRS, architecture, API design, database schema, and deployment guide.
-
-Production API: https://poaley-chedec-1.onrender.com
-
-Nedarim Plus donation webhooks and receipt tracking: [docs/nedarim-receipts.md](docs/nedarim-receipts.md). The transaction webhook is `https://poaley-chedec-1.onrender.com/api/v1/webhooks/nedarim/transactions`. On Render, `CORS_ORIGINS` is only for the frontend browser. Nedarim posts server-to-server, so set `NEDARIM_WEBHOOK_SECRET` on the API service and do not add Nedarim to `CORS_ORIGINS`.

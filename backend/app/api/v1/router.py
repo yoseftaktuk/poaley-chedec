@@ -8,14 +8,12 @@ from app.api.v1.endpoints import (
     gallery,
     health,
     homepage,
-    internal_nedarim,
     mikveh,
     prayer_times,
     seo,
     settings,
     torah_lessons,
     uploads,
-    webhooks_nedarim,
 )
 from app.api.v1.endpoints.admin import router as admin_router
 
@@ -33,10 +31,4 @@ api_router.include_router(contact.router, prefix="/contact", tags=["contact"])
 api_router.include_router(banners.router, prefix="/banners", tags=["banners"])
 api_router.include_router(settings.router, prefix="/settings", tags=["settings"])
 api_router.include_router(seo.router, tags=["seo"])
-api_router.include_router(
-    webhooks_nedarim.router, prefix="/webhooks/nedarim", tags=["webhooks-nedarim"]
-)
-api_router.include_router(
-    internal_nedarim.router, prefix="/internal/nedarim", tags=["internal-nedarim"]
-)
 api_router.include_router(admin_router, prefix="/admin")

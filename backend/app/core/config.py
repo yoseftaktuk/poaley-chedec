@@ -112,23 +112,6 @@ class Settings(BaseSettings):
     cloudinary_api_key: str = ""
     cloudinary_api_secret: str = ""
 
-    # Nedarim Plus donation receipts
-    nedarim_mosad_id: str = "7018669"
-    nedarim_api_password: str = ""
-    nedarim_webhook_secret: str = ""
-    nedarim_reconcile_secret: str = ""
-    nedarim_hmac_max_skew_seconds: int = 300
-
-    # Yemot SMS
-    yemot_api_key: str = ""
-    yemot_sms_from: str = ""
-    yemot_api_base_url: str = "https://www.call2all.co.il/ym/api"
-
-    # GreenAPI WhatsApp (secondary)
-    greenapi_id_instance: str = ""
-    greenapi_api_token: str = ""
-    greenapi_api_url: str = "https://api.green-api.com"
-
     @field_validator("database_url", "test_database_url", mode="before")
     @classmethod
     def ensure_async_postgres_driver(cls, value: object) -> object:
